@@ -11,7 +11,7 @@
         dark
         borderless>
       <template v-slot:before>
-        <q-icon @click="getLocation" name="my_location" />
+        <q-icon @click="getLocation" name="my_location" class="cursor-pointer" />
       </template>
 
       <template v-slot:append>

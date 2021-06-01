@@ -59,12 +59,19 @@ export default {
   mix-blend-mode: overlay;
 }
 
-.bg-day .bg-overlay {
-  opacity: 0.5;
-  background: radial-gradient(circle at top, #eee, #000);
+.bg-day {
+
+  .bg-overlay {
+    opacity: 0.5;
+    background: radial-gradient(circle at top, #eee, #000);
+  }
 }
-.bg-night .bg-overlay {
-  opacity: 0.7;
-  background: radial-gradient(circle at top, #555, #000);
+.bg-night {
+  filter: saturate(0.4);
+
+  .bg-overlay {
+    opacity: 0.7;
+    background: radial-gradient(circle at top, #555, #000);
+  }
 }
 </style>
