@@ -23,15 +23,28 @@
 
   <template v-if="weatherData">
     <div class="col text-white text-center">
-      <div class="text-h4 text-weight-light">
+      <div class="q-py-sm text-h4 text-weight-light">
         {{ weatherData.name || 'n/a' }}
+        <sup style="font-size: 40%">{{ weatherData.sys.country }}</sup>
       </div>
-      <div class="text-h6 text-weight-light">
+      <div class="q-py-sm text-h6 text-weight-light">
         {{ weatherData.weather[0].main }}
       </div>
-      <div class="text-h1 text-weight-thin relative-position">
+      <div class="q-py-sm text-h1 text-weight-thin relative-position">
         <span>{{ Math.round(weatherData.main.temp) }}</span>
         <span class="text-h4 degree">&deg;C</span>
+      </div>
+
+      <div class="q-pt-md detailed-view">
+        <div v-if="detailedView.pressure" class="q-py-xs">
+          Pressure {{ weatherData.main.pressure	}} hPa
+        </div>
+        <div v-if="detailedView.humidity" class="q-py-xs">
+          Humidity: {{ weatherData.main.humidity  }}%
+        </div>
+        <div v-if="detailedView.windSpeed" class="q-py-xs">
+          Wind speed: {{ weatherData.wind.speed }} m/s
+        </div>
       </div>
     </div>
 
@@ -53,7 +66,8 @@
     </div>
   </template>
 
-  <div v-if="message" @click="message = null" class="message q-pa-md text-white text-center">
+  <div v-if="message" @click="message = null" class="message q-pa-md text-white text-center cursor-pointer">
+    <q-icon name="info"></q-icon>
     {{ message }}
   </div>
 
@@ -63,7 +77,7 @@
 </template>
 
 <script>
-const DEBUG = true;
+const DEBUG = false;
 
 export default {
   //====================================================
@@ -73,17 +87,30 @@ export default {
     return {
       loading: false,
       search: '',
-      coords: null,
       message: null,
       apiKey: this.$root.KEYS.OPENWEATHER_API_KEY,
       apiUrl: 'https://api.openweathermap.org/data/2.5/weather',
-      imgUrl: 'http://openweathermap.org/img/wn/',
+      imgUrl: 'https://openweathermap.org/img/wn/',
+      freegeoipUrl: 'https://freegeoip.app/json/',
       units: 'metric',
       backgroundColor: '#046'
     }
   },
   //====================================================
   computed: {
+    //==============
+    detailedView() {
+      return this.$root.settings.show;
+    },
+    //==============
+    coords: {
+      get() {
+        return this.$root.coords;
+      },
+      set(coords) {
+        this.$root.saveCoords(coords);
+      }
+    },
     //==============
     weatherData: {
       get() {
@@ -113,10 +140,10 @@ export default {
     getLocation() {
       if (DEBUG) console.log('[getLocation]')
 
-      this.$q.loading.show({ delay: 200 });
+      this.$q.loading.show({ delay: 100 });
 
       if (this.$q.platform.is.electron) {
-        this.$axios.get('https://freegeoip.app/json/')
+        this.$axios.get(this.freegeoipUrl)
         .then(response => {
           this.coords = response.data;
           this.getWeatherByCoords();
@@ -147,7 +174,7 @@ export default {
       queryParams = this.$utils.makeQueryParams(params);
       url = `${ this.apiUrl }?${ queryParams }`;
 
-      this.$q.loading.show({ delay: 200 });
+      this.$q.loading.show({ delay: 100 });
       this.$axios(url)
       .then(response => {
         this.$q.loading.hide();
@@ -173,7 +200,13 @@ export default {
       this.getWeatherByParams({ q: this.search });
     },
     //==============
-  }
+  },
+  //====================================================
+  created() {
+    if (this.$root.settings.saveLocation && this.coords) {
+      this.getWeatherByCoords();
+    }
+  },
   //====================================================
 }
 </script>
@@ -197,5 +230,13 @@ export default {
   top: 80px;
   left: 0;
   background: #fff5;
+}
+
+.detailed-view {
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
+  &:hover {
+    opacity: 0.9;
+  }
 }
 </style>

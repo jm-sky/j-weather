@@ -10,7 +10,23 @@ const $utils = {
     })
 
     return queryParams.join('&')
-  }
+  },
+  //--------------------------------------------
+  parseJSON(string) {
+    let jsonObject = null;
+
+    if (typeof string == 'object') {
+      return string
+    }
+
+    try {
+      jsonObject = JSON.parse(string);
+    } catch(_) {
+      console.warn('Could not parse JSON string', string);
+    }
+
+    return jsonObject
+  },
   //--------------------------------------------
 }
 

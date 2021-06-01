@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf" :class="bgClass" :style="`background: ${backgroundColor}`">
-    <div class="bg-overlay"></div>
+    <div v-if="backgroundOverlay" class="bg-overlay"></div>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -19,8 +19,12 @@ export default {
   //====================================================
   computed: {
     //==============
+    backgroundOverlay() {
+      return this.$root.settings.backgroundOverlay;
+    },
+    //==============
     backgroundColor() {
-      return this.$root.backgroundColor;
+      return this.$root.settings.backgroundColor;
     },
     //==============
     weatherData() {
