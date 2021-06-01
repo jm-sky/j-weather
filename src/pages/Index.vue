@@ -67,7 +67,7 @@ export default {
       coords: null,
       weatherData: null,
       message: null,
-      apiKey: '890e1ed76977a47038cb1d1864269f10',
+      apiKey: null,
       apiUrl: 'https://api.openweathermap.org/data/2.5/weather',
       imgUrl: 'http://openweathermap.org/img/wn/',
       units: 'metric'
