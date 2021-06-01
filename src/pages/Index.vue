@@ -88,12 +88,12 @@ export default {
       loading: false,
       search: '',
       message: null,
-      apiKey: this.$root.KEYS.OPENWEATHER_API_KEY,
-      apiUrl: 'https://api.openweathermap.org/data/2.5/weather',
-      imgUrl: 'https://openweathermap.org/img/wn/',
-      freegeoipUrl: 'https://freegeoip.app/json/',
-      units: 'metric',
-      backgroundColor: '#046'
+      apiKey: process.env.OPENWEATHER_API_KEY,
+      apiUrl: process.env.API_URL,
+      imgUrl: process.env.IMG_URL,
+      freegeoipUrl: process.env.FREEGEOIP_URL,
+      units: process.env.UNITS || "metric",
+      backgroundColor:  process.env.BACKGROUND_COLOR || "#046",
     }
   },
   //====================================================
@@ -168,8 +168,8 @@ export default {
     getWeatherByParams(params) {
       let queryParams, url;
 
-      params.units = this.units;
-      params.appid = this.apiKey;
+      if (this.units) params.units = this.units;
+      if (this.apiKey) params.appid = this.apiKey;
 
       queryParams = this.$utils.makeQueryParams(params);
       url = `${ this.apiUrl }?${ queryParams }`;
