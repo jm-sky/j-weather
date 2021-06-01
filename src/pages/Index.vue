@@ -1,15 +1,22 @@
 <template>
 <q-page class="flex column">
-  <div class="bg"></div>
+  <!-- <div class="bg-overlay"></div> -->
 
-  <div class="col q-pt-lg q-px-md">
-    <q-input v-model="search" placeholder="Search" dark borderless>
+  <div class="col q-pt-md q-px-md">
+    <q-input
+        v-model="search"
+        @keyup.enter="getWeatherBySearch"
+        @focus="$event.target.select ? $event.target.select() : null"
+        placeholder="Search"
+        dark
+        borderless>
       <template v-slot:before>
-        <q-icon @click="getMyLocation" name="my_location" />
+        <q-icon @click="getLocation" name="my_location" />
       </template>
 
       <template v-slot:append>
-        <q-btn round dense flat icon="search" />
+        <q-btn @click="getWeatherBySearch" round dense flat icon="search" />
+        <q-btn to="/settings" round dense flat icon="menu" />
       </template>
     </q-input>
   </div>
@@ -39,7 +46,7 @@
       <div class="col text-h2 text-weight-thin">
         J-Weather
       </div>
-      <q-btn @click="getMyLocation" class="col" flat>
+      <q-btn @click="getLocation" class="col" flat>
         <q-icon left size="3em" name="my_location" />
         <div>Find My Location</div>
       </q-btn>
@@ -56,6 +63,8 @@
 </template>
 
 <script>
+const DEBUG = true;
+
 export default {
   //====================================================
   name: 'PageIndex',
@@ -65,16 +74,25 @@ export default {
       loading: false,
       search: '',
       coords: null,
-      weatherData: null,
       message: null,
-      apiKey: null,
+      apiKey: this.$root.KEYS.OPENWEATHER_API_KEY,
       apiUrl: 'https://api.openweathermap.org/data/2.5/weather',
       imgUrl: 'http://openweathermap.org/img/wn/',
-      units: 'metric'
+      units: 'metric',
+      backgroundColor: '#046'
     }
   },
   //====================================================
   computed: {
+    //==============
+    weatherData: {
+      get() {
+        return this.$root.weatherData;
+      },
+      set(weatherData) {
+        this.$root.weatherData = weatherData;
+      }
+    },
     //==============
     lat() {
       return this.coords.latitude;
@@ -92,14 +110,26 @@ export default {
       this.message = 'No location data available';
     },
     //==============
-    getMyLocation() {
-      console.log('[getMyLocation]')
+    getLocation() {
+      if (DEBUG) console.log('[getLocation]')
 
       this.$q.loading.show({ delay: 200 });
 
+      if (this.$q.platform.is.electron) {
+        this.$axios.get('https://freegeoip.app/json/')
+        .then(response => {
+          this.coords = response.data;
+          this.getWeatherByCoords();
+        })
+        .catch(_ => {
+          this.$q.loading.hide()
+          this.noLocationDataError();
+        })
+        return;
+      }
+
       navigator.geolocation.getCurrentPosition(position => {
-        console.log('[getMyLocation] position:', position)
-        this.$q.loading.hide()
+        if (DEBUG) console.log('[getLocation] position:', position)
         this.coords = position.coords;
         this.getWeatherByCoords();
       }, _ => {
@@ -108,35 +138,40 @@ export default {
       });
     },
     //==============
+    getWeatherByParams(params) {
+      let queryParams, url;
+
+      params.units = this.units;
+      params.appid = this.apiKey;
+
+      queryParams = this.$utils.makeQueryParams(params);
+      url = `${ this.apiUrl }?${ queryParams }`;
+
+      this.$q.loading.show({ delay: 200 });
+      this.$axios(url)
+      .then(response => {
+        this.$q.loading.hide();
+        this.weatherData = response.data;
+      })
+      .catch(_ => {
+        this.$q.loading.hide();
+        this.message = 'Could not load weather data...';
+      })
+    },
+    //==============
     getWeatherByCoords() {
-      console.log('[getWeatherByCoords] coords:', this.coords)
+      if (DEBUG) console.log('[getWeatherByCoords] coords:', this.coords)
       if (!this.lat) return this.noLocationDataError();
       if (!this.lon) return this.noLocationDataError();
 
-      this.$q.loading.show({ delay: 200 });
-      this.$axios(`${ this.apiUrl }?lat=${ this.lat }&lon=${ this.lon }&units=${ this.units }&appid=${ this.apiKey }`)
-      .then(response => {
-        this.$q.loading.hide()
-        this.weatherData = response.data;
-      })
-      .catch(_ => {
-        this.$q.loading.hide()
-        this.message = 'Could not load weather data...';
-      })
+      this.getWeatherByParams({ lat: this.lat, lon: this.lon });
     },
     //==============
     getWeatherBySearch() {
-      console.log('[getWeatherByCoords] search:', this.search)
+      if (DEBUG) console.log('[getWeatherByCoords] search:', this.search)
 
-      this.$axios(`${ this.apiUrl }?q=${ this.search }&units=${ this.units }&appid=${ this.apiKey }`)
-      .then(response => {
-        this.weatherData = response.data;
-      })
-      .catch(_ => {
-        this.message = 'Could not load weather data...';
-      })
+      this.getWeatherByParams({ q: this.search });
     },
-    //==============
     //==============
   }
   //====================================================
@@ -144,21 +179,6 @@ export default {
 </script>
 
 <style lang="scss">
-.q-page {
-  // background: linear-gradient(to bottom, #777a, #000a);
-  background: radial-gradient(circle at top, #5558, #0008);
-}
-
-.bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #046;
-  z-index: -1;
-}
-
 .degree {
   position: absolute;
   top: 0;
