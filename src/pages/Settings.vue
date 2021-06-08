@@ -2,39 +2,53 @@
 <q-page class="flex column content-center">
   <div class="col q-pt-lg text-white text-center">
 
-    <div class="text-h4 text-weight-thin">Settings</div>
+    <div class="text-h4 text-weight-thin">{{ $t('Settings') }}</div>
     <div class="q-pt-lg fixed-top-right">
-      <q-btn to="/" flat>HOME</q-btn>
+      <q-btn to="/" flat>{{ $t('HOME') }}</q-btn>
     </div>
 
     <q-separator class="q-my-md" inset />
 
+    <q-select
+      v-model="lang"
+      :options="langOptions"
+      :label="$t('Language')"
+      dense
+      dark
+      borderless
+      emit-value
+      map-options
+      options-dense
+    />
+
+    <q-separator class="q-my-md" inset />
+
     <div class="q-py-xs">
-      <q-toggle v-model="saveLocation" label="Save location" left-label />
+      <q-toggle v-model="saveLocation" :label="$t('Save location')" left-label />
     </div>
 
     <div class="q-pa-md">
       <div class="q-py-xs">
-        <q-toggle v-model="show.pressure" label="Show pressure" left-label />
+        <q-toggle v-model="show.pressure" :label="$t('Show pressure')" left-label />
       </div>
       <div class="q-py-xs">
-        <q-toggle v-model="show.humidity" label="Show humidity" left-label />
+        <q-toggle v-model="show.humidity" :label="$t('Show humidity')" left-label />
       </div>
       <div class="q-py-xs">
-        <q-toggle v-model="show.windSpeed" label="Show wind speed" left-label />
+        <q-toggle v-model="show.windSpeed" :label="$t('Show wind speed')" left-label />
       </div>
 
       <q-separator class="q-my-sm" inset />
 
       <div class="q-py-xs">
-        <q-toggle v-model="backgroundOverlay" label="Background overlay" left-label />
+        <q-toggle v-model="backgroundOverlay" :label="$t('Background overlay')" left-label />
       </div>
 
       <div class="q-py-xs">
         <q-input
           filled
           v-model="backgroundColor"
-          label="Background Color"
+          :label="$t('Background Color')"
           class="my-input"
           dark
         >
@@ -59,10 +73,28 @@ export default {
   name: 'Settings',
   //====================================================
   data() {
-    return {}
+    return {
+      lang: this.$i18n.locale,
+    }
+  },
+  //====================================================
+  watch: {
+    //==============
+    lang(lang) {
+      this.$i18n.locale = lang;
+      this.$root.settings.language = lang;
+    }
+    //==============
   },
   //====================================================
   computed: {
+    //==============
+    langOptions() {
+      return [
+        { value: 'en', label: this.$t('English') },
+        { value: 'pl', label: this.$t('Polish') }
+      ]
+    },
     //==============
     saveLocation: {
       get() {

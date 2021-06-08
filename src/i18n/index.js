@@ -1,0 +1,42 @@
+const messages = {
+  en: {
+    'Find My Location': 'Find My Location',
+    'Settings': 'Settings',
+    'HOME': 'HOME',
+    'Language': 'Language',
+    'Search': 'Search',
+    'Pressure': 'Pressure',
+    'Humidity': 'Humidity',
+    'Wind speed': 'Wind speed',
+    'Could not load weather data': 'Could not load weather data',
+    'Save location': 'Save location',
+    'Show pressure': 'Show pressure',
+    'Show humidity': 'Show humidity',
+    'Show wind speed': 'Show wind speed',
+    'Background overlay': 'Background overlay',
+    'Background Color': 'Background Color',
+    'English': 'English',
+    'Polish': 'Polski',
+  },
+  pl: {
+    'Find My Location': 'Znajdź moją pozycję',
+    'Settings': 'Ustawienia',
+    'HOME': 'Strona główna',
+    'Language': 'Język',
+    'Search': 'Szukaj',
+    'Pressure': 'Ciśnienie',
+    'Humidity': 'Wilgotność',
+    'Wind speed': 'Siła wiatru',
+    'Could not load weather data': 'Nie można załadować danych pogody',
+    'Save location': 'Zapisuj lokalizację',
+    'Show pressure': 'Pokaż ciśnienie',
+    'Show humidity': 'Pokaż wilgotność',
+    'Show wind speed': 'Pokaż siłę wiatru',
+    'Background overlay': 'Cieniuj tło',
+    'Background Color': 'Kolor tła',
+    'English': 'English',
+    'Polish': 'Polish',
+  }
+}
+
+export default messages;

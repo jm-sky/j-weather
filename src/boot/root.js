@@ -13,6 +13,7 @@ export default ({ app }) => {
   app.data.settings.backgroundColor = '#046';
   app.data.settings.backgroundOverlay = true;
   app.data.settings.saveLocation = true;
+  app.data.settings.language = 'en';
 
   app.methods = app.methods || {};
   app.watch = app.watch || {};
@@ -57,6 +58,7 @@ export default ({ app }) => {
     if (coords) this.coords = coords;
     if (settings) {
       this.settings = Object.assign({}, this.settings, settings);
+      this.$i18n.locale = this.settings.language;
     }
   }
   //--------------------------------------------------

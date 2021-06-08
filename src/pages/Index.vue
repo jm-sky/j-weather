@@ -1,13 +1,12 @@
 <template>
 <q-page class="flex column">
-  <!-- <div class="bg-overlay"></div> -->
 
   <div class="col q-pt-md q-px-md">
     <q-input
         v-model="search"
         @keyup.enter="getWeatherBySearch"
         @focus="$event.target.select ? $event.target.select() : null"
-        placeholder="Search"
+        :placeholder="$t('Search')"
         dark
         borderless>
       <template v-slot:before>
@@ -37,13 +36,13 @@
 
       <div class="q-pt-md detailed-view">
         <div v-if="detailedView.pressure" class="q-py-xs">
-          Pressure {{ weatherData.main.pressure	}} hPa
+          {{ $t('Pressure') }} {{ weatherData.main.pressure	}} hPa
         </div>
         <div v-if="detailedView.humidity" class="q-py-xs">
-          Humidity: {{ weatherData.main.humidity  }}%
+          {{ $t('Humidity') }}: {{ weatherData.main.humidity  }}%
         </div>
         <div v-if="detailedView.windSpeed" class="q-py-xs">
-          Wind speed: {{ weatherData.wind.speed }} m/s
+          {{ $t('Wind speed') }}: {{ weatherData.wind.speed }} m/s
         </div>
       </div>
     </div>
@@ -61,7 +60,7 @@
       </div>
       <q-btn @click="getLocation" class="col" flat>
         <q-icon left size="3em" name="my_location" />
-        <div>Find My Location</div>
+        <div>{{ $t('Find My Location') }}</div>
       </q-btn>
     </div>
   </template>
@@ -182,7 +181,7 @@ export default {
       })
       .catch(_ => {
         this.$q.loading.hide();
-        this.message = 'Could not load weather data...';
+        this.message = `${this.$t('Could not load weather data')}...`;
       })
     },
     //==============

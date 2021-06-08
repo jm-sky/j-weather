@@ -22,6 +22,7 @@ module.exports = function (/* ctx */) {
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
       'utils',
+      'i18n',
       'root',
       'axios',
     ],
