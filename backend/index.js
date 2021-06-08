@@ -23,7 +23,7 @@ app.get('/api', (req, res) => {
   let params, queryParams;
 
   params = req.query;
-params.appid = OPENWEATHER_API_KEY;
+  params.appid = OPENWEATHER_API_KEY;
   queryParams = $utils.makeQueryParams(params);
 
   axios(`${API_URL}?${queryParams}`)
