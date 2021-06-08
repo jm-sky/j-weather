@@ -33,6 +33,7 @@ export default {
     //==============
     bgClass() {
       if (!this.weatherData) return
+      if (!this.weatherData.weather) return
 
       if (this.weatherData.weather[0].icon.endsWith('n')) {
         return 'bg-night';

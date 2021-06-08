@@ -130,7 +130,7 @@ module.exports = function (/* ctx */) {
         description: `Weather App`,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
+        background_color: '#000000',
         theme_color: '#027be3',
         icons: [
           {

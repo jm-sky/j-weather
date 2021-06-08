@@ -20,7 +20,7 @@
     </q-input>
   </div>
 
-  <template v-if="weatherData">
+  <template v-if="weatherData && weatherData.weather">
     <div class="col text-white text-center">
       <div class="q-py-sm text-h4 text-weight-light">
         {{ weatherData.name || 'n/a' }}
