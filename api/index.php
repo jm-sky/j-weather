@@ -2,7 +2,7 @@
 @error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 @ini_set('display_errors', 0);
 @header("Content-type: application/json; charset=utf-8");
-
+//-------------------------------------------------------------------
 require_once __DIR__ . '/vendor/autoload.php';
 
 //-------------------------------------------------------------------
@@ -11,6 +11,12 @@ $dotenv->load();
 $params = $_GET;
 $api_key = $_GET['appid'];
 $api_url = $_ENV['API_URL'];
+$allowedReferers = explode(';', $_ENV['ALLOWED_REFERERS']) ?? [];
+
+//-------------------------------------------------------------------
+if (in_array($_SERVER['HTTP_REFERER'], $allowedReferers)) {
+  @header("Access-Control-Allow-Origin: {$_SERVER['HTTP_REFERER']}");
+}
 
 //-------------------------------------------------------------------
 if ($api_key == null || $api_key != $_ENV['API_KEY']) {
