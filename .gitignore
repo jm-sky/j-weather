@@ -36,3 +36,4 @@ yarn-error.log*
 package-lock.json
 api/vendor/*
 api/composer.lock
+.firebase/*
