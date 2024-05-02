@@ -1,6 +1,9 @@
 # J-Weather (j-weather)
 
-Weather App
+Weather single page app written with Vue.js & Quasar framework.
+
+![obraz](https://github.com/jm-sky/j-weather/assets/17783569/f52bab7e-08cb-4f4d-afd8-ec2c3f2be929)
+
 
 ## Install the dependencies
 ```bash
